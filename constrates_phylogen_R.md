@@ -1,5 +1,5 @@
 # Analyses contrastes phylogénétiques sous R (M. Mortz)
-À ce stade, vous devriez avoir un arbre phylogénétique pour 25 espèces de poissons (arbre_16S_poissons), ainsi qu’un tableau de données avec, pour chaque espèce, des valeurs de longévité, de température et de nombre d’oeufs par portée et/ou taille des oeufs. 
+À ce stade, vous devriez avoir un arbre phylogénétique pour 25 espèces de poissons (arbre_16S_poissons), ainsi qu’un tableau de données avec, pour chaque espèce, des valeurs de longévité, de température , fécondité,....etc. 
 
 La suite de l’analyse va consister à estimer le degré de corrélation entre ces traits en considérant l’impact dû aux relations phylogénétiques entre les espèces. 
 
@@ -19,7 +19,7 @@ Visualiser l’arbre :
 ```r
 plot(tree);axisPhylo()
 ```
-Charger les traits biologiques (taille, longévité, température max, nombre d’œufs par portée et/ou taille des oeufs) :
+Charger les traits biologiques (taille, longévité, température max) :
 ```r
 traits_log<-read.table("traits_log_fishes.txt",h=T)
 Ylog <- traits_log$Length
