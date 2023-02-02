@@ -1,20 +1,10 @@
-library(rcompanion)
-library(DescTools)
-library(binom)
-library(MASS)
-library(vegan)
-library(tidyverse)
-library(randomcoloR)
-library(sciplot)
+
+
 library(readxl)
-library(mosaic)
-library(tigerstats)
-library(car)
-library(vistributions)
 library(ggplot2)
 #vous avez pas besoin de toutes ces librairies, je sais juste pas lesquels sont les bonnes ;)
 
-Allometry <- read_excel(file.choose(),1)
+#Allometry <- read_excel(file.choose(),1)
 
 Allometry$logO2=log10(Allometry$O2) #changer en log
 Allometry$logPoids=log10(Allometry$Poids)
@@ -23,7 +13,7 @@ model <- lm(logPoids~logO2, data=Allometry) #fonction linéaire
 summary(model)
 res <- resid(model)
 res #regarde tes résidues si ça fit
-plot(fitted(model), res)#pas le plus beau
+plot(fitted(model), res)
 abline(0,0)
 
 Allometry$predicted <- predict(model) #valeurs prédites
