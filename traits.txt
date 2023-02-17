@@ -1,0 +1,11 @@
+BINOMIAL NAME	ORDER	CLASS	COMMON NAME	FAMILIY	Total Length LM (cm)	LM (cm)	AM	MAX LENGTH (cm)	MAX LENGTH TL (cm)	MAX WEIGHT (kg)	MAX AGE	MIN TEMP  (°C)	MAX TEMP (°C)
+Acipenser_baerii	Acipenseriformes	Actinopterygii	Siberian sturgeon	Acipenseridae	86.9	86.9	9	200	200	210	63	1	10
+Acipenser_gueldenstaedtii	Acipenseriformes	Actinopterygii	Danube_sturgeon	Acipenseridae	80	80	8	236	236	115	46	10	20
+Amblyraja_radiata	Rajiformes	Chondrichthyes	Starry_ray	Rajidae	46	46	4	105	105	11.4	28	-1	14
+Carassius_gibelio	Cypriniformes	Actinopterygii	Prussian_carp	Cyprinidae	9.7	9.7	1	46.6	46.6	3	10	10	20
+Carcharhinus_plumbeus	Carcharhiniformes	Chondrichthyes	Sandbar_shark	Carcharhinidae_	130	130	13	180	180	117.9	34	23	27
+Megalops_atlanticus	Elopiformes	Actinopterygii	Tarpon	 Megalopidae	146.15	120	10	250	250	161	55	22	28
+Melanogrammus_aeglefinus	Gadiformes	Actinopterygii	Haddock	Gadidae_	41.91	35	2.1	112	112	16.8	20	0	13
+Perca_fluviatilis	Perciformes	Actinopterygii	European_perch	_Percidae	11	11	2	60	67.64	4.8	22	10	22
+Pungitius_pungitius	Gasterosteiformes	Actinopterygii	Ninespine_stickleback	Gasterosteidae	3.7	3.7	2	9	9		5	10	20
+Reinhardtius_hippoglossoides	Pleuronectiformes	Actinopterygii	Greenland_halibut	Pleuronectidae	60	60	7	110	110	7	30	-1	4
