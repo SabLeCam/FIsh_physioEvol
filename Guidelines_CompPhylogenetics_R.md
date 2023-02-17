@@ -1,7 +1,7 @@
 # PHYLOGÉNÉTIQUE COMPARATIVE
 source(Introduction to the phylogenetic (comparative) method, J. Wintternitz)
 
-Ici vous trouverz comment rélaiser l'enesmble des analyses de phylogénétique comparative sous R
+Ici vous trouverez comment réaliser l'enesemble des analyses de phylogénétique comparative sous R
 
 ## package R nécessaires pour ces analyses
 
