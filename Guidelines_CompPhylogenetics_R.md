@@ -1,5 +1,5 @@
 # PHYLOGÉNÉTIQUE COMPARATIVE
-source(Introduction to the phylogenetic (comparative) method, J. Wintternitz)
+[source](https://static1.squarespace.com/static/5459da8ae4b042d9849b7a7b/t/57ea64eae58c62718aa34769/1474979059782/Nesin_Winternitz_Practical_1and2.pdf)(Introduction to the phylogenetic (comparative) method, J. Wintternitz 2016)
 
 Ici vous trouverez comment réaliser l'enesemble des analyses de phylogénétique comparative sous R
 
@@ -309,7 +309,7 @@ title("lambda=0")
 ```
 ![image](https://user-images.githubusercontent.com/20643860/223847559-c8990344-1df7-4b60-879f-c42c9a85fe79.png)
 
-La fonction phylosig (package phytools) permet de tester si lambda est significativement différent de 0 pour les deux traits
+La fonction *phylosig* (package *phytools*) permet de tester si lambda est significativement différent de 0 pour les deux traits
 ```r
 logAM <- traits$log.AM
 names(logAM) <- rownames(traits)
@@ -319,7 +319,7 @@ phylosig(tree, logAM, method = "lambda", test = TRUE)
 
 Il semble y avoir un signal phylogénétique derrière l'evolution de l'âge à la maturité. c'est corroborré par les deux méthode d'estimation de lambda.
 
-On peut aussi estimer lambda avec les fonctions fitDiscrete ou fitContinuous du package geiger, selon si on a des traits continus ou discrets. On génère l'estimation de lambda avec le maximum de vraisemblance.
+On peut aussi estimer lambda avec les fonctions *fitDiscrete* ou *fitContinuous* du package *geiger*, selon si on a des traits continus ou discrets. On génère l'estimation de lambda avec le maximum de vraisemblance.
 
 ```r
 lambda.AM<-fitContinuous(phy = tree, dat = logAM, model = "lambda")
@@ -351,7 +351,7 @@ phylosig(tree, MAXAGE, method = "K", test = T)
 
 
 
-**1) Analyses des contrastes indépendants**
+**2) Analyses des contrastes indépendants**
 
 les contrastes sont les différences de valeurs de traits entre espèces (et noeuds). On utilise la méthode des contrastes indépendant afin d'estimer les corrélations évolutives entre les caractères.
 
@@ -365,7 +365,7 @@ comp.ic<- crunch(MAX.AGE ~ log.AM, data=comp, equal.branch.length=TRUE)
 summary(comp.ic)
 ```
 <img width="462" alt="image" src="https://user-images.githubusercontent.com/20643860/223866208-32ce305e-4204-433f-a014-d04674331dc1.png">
-La corrélation reste significative mais les paramètres de l'équation sont différents (comparaison avec modèle 1)
+
 
 On visualise les résultats et les compare avec les corrélations ne tenant pas compte du signal phylogénétique
 ```r
@@ -380,6 +380,34 @@ abline(model1, col="red")
 title("original regression")
 ```
 ![image](https://user-images.githubusercontent.com/20643860/223866358-34b71fe1-2fc8-495c-bc57-3daa075d9b16.png)
+
+
+**3) Réaliser des analyses PGLS (phylogenetic generalized least squares)**
+
+Cette méthode est plus flexible que celle des contrastes indépendants. Le modèle d'évolution peut s'écarter du modèle brownien strcit (Lambda ou K=1). Plusieurs paramètres d'ajustement peuvent être incoporé dans l'analyse (voir help du package *caper* pour des options) afin d'améliorer l'estimation des corrélations entre les traits. De plus, l'intercept de la régression ne doit pas être fixée à 0.
+
+```r
+comp.pgls<-pgls(MAX.AGE ~ log.AM, data=comp, lambda="ML")
+summary(comp.pgls)
+```
+<img width="459" alt="image" src="https://user-images.githubusercontent.com/20643860/223879490-b8b382bf-38cd-4121-ba60-63c880b72021.png">
+La corrélation reste significative mais les paramètres de l'équation sont différents (comparaison avec modèle 1)
+
+```r
+plot(MAX.AGE ~ log.AM , data=traits)
+abline(comp.pgls, col="red",lty=1)
+abline(model1, col="red",lty=2)
+legend()
+legend('topleft', legend=c("PGLS", "Original"), cex=0.8, col="red", lty=c(1,2))
+```
+
+![image](https://user-images.githubusercontent.com/20643860/223879323-7df79950-3597-403f-bb2d-60f152c857a8.png)
+
+
+
+
+
+
 
 
 
