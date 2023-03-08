@@ -307,10 +307,80 @@ title("lambda=0.3")
 plot(tree0) #star phylogeny (no phylo signal)
 title("lambda=0")
 ```
+![image](https://user-images.githubusercontent.com/20643860/223847559-c8990344-1df7-4b60-879f-c42c9a85fe79.png)
+
+La fonction phylosig (package phytools) permet de tester si lambda est significativement différent de 0 pour les deux traits
+```r
+logAM <- traits$log.AM
+names(logAM) <- rownames(traits)
+phylosig(tree, logAM, method = "lambda", test = TRUE)
+```
+<img width="285" alt="image" src="https://user-images.githubusercontent.com/20643860/223848628-8f41a6d5-e168-4f44-9ba9-1853567a66a0.png">
+
+Il semble y avoir un signal phylogénétique derrière l'evolution de l'âge à la maturité. c'est corroborré par les deux méthode d'estimation de lambda.
+
+On peut aussi estimer lambda avec les fonctions fitDiscrete ou fitContinuous du package geiger, selon si on a des traits continus ou discrets. On génère l'estimation de lambda avec le maximum de vraisemblance.
+
+```r
+lambda.AM<-fitContinuous(phy = tree, dat = logAM, model = "lambda")
+```
+<img width="387" alt="image" src="https://user-images.githubusercontent.com/20643860/223850011-0532d2a7-c53f-4af4-9bfd-ab16866efd5f.png">
+
+On procède de même avec la longévité:
+```r
+MAXAGE <- traits$MAX.AGE
+names(MAXAGE) <- rownames(traits)
+phylosig(tree, MAXAGE, method = "lambda", test = TRUE)
+
+lambda.MAXAGE<-fitContinuous(phy = tree, dat = MAXAGE, model = "lambda")
+```
+Il n'y a pas de signal phylogénétique pour la longévité
+
 
 - <ins>Signal phylogénétique avec le K de Blomberg</ins> (Blomberg et al. 2003)
 
-K peut être considéré comme la proportion de covariance dûe à la phylogénie. Varie généralement entre O et 1 mais peut être supérieur à 1 si les covariances phylogénétiques sont plus fortes qu'attendes sous le modèle brownien.
+K peut être considéré comme la proportion de covariance dûe à la phylogénie. Varie généralement entre O et 1 mais peut être supérieur à 1 si les covariances phylogénétiques sont plus fortes qu'attendues sous le modèle brownien.
+```r
+phylosig(tree, logAM, method = "K", test = T)
+```
+<img width="344" alt="image" src="https://user-images.githubusercontent.com/20643860/223858933-797fc79e-5e09-4eea-9a7f-85b04e5a02a7.png">
+```r
+phylosig(tree, MAXAGE, method = "K", test = T)
+```
+<img width="344" alt="image" src="https://user-images.githubusercontent.com/20643860/223859443-b105555c-7c54-4421-9f39-a35d800d373b.png">
+
+
+
+**1) Analyses des contrastes indépendants**
+
+les contrastes sont les différences de valeurs de traits entre espèces (et noeuds). On utilise la méthode des contrastes indépendant afin d'estimer les corrélations évolutives entre les caractères.
+
+```r
+#regrouper les données phénotypiques et phylogénétiques en un objet
+
+comp<- comparative.data(tree, traits, names.col=BINOMIAL.NAME, vcv=TRUE,
+                        na.omit=FALSE, warn.dropped=TRUE)
+#avec la fonction crunch(), on fitte les modèles de régression des contrats indépendants
+comp.ic<- crunch(MAX.AGE ~ log.AM, data=comp, equal.branch.length=TRUE)
+summary(comp.ic)
+```
+<img width="462" alt="image" src="https://user-images.githubusercontent.com/20643860/223866208-32ce305e-4204-433f-a014-d04674331dc1.png">
+La corrélation reste significative mais les paramètres de l'équation sont différents (comparaison avec modèle 1)
+
+On visualise les résultats et les compare avec les corrélations ne tenant pas compte du signal phylogénétique
+```r
+comp_contr<-caic.table(comp.ic)
+
+par(mfrow=c(1,2))
+plot(MAX.AGE ~ log.AM , data=comp_contr)
+abline(comp.ic, col="red")
+title("IC regression")
+plot(MAX.AGE ~ log.AM, data=traits)
+abline(model1, col="red")
+title("original regression")
+```
+![image](https://user-images.githubusercontent.com/20643860/223866358-34b71fe1-2fc8-495c-bc57-3daa075d9b16.png)
+
 
 
 
