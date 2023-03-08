@@ -228,6 +228,33 @@ add.simmap.legend(colors=cols,prompt=TRUE,fsize=0.8,vertical=TRUE, shape="square
 ![image](https://user-images.githubusercontent.com/20643860/219701552-8f3619fe-daa8-4a16-b1a5-2e6b550a734c.png)
 
 
+# Tester des omdèles évolutifs compte tenu de la phylogénie
+
+Vérifier que l'arbre est dichotomique (pleinement résolu):
+```r
+is.binary.tree(tree)
+```
+Vérifier que l'arbre est enraciné et que la racine a une longueur non nulle:
+```r
+is.rooted(tree) #check if tree is rooted
+#IF FALSE
+tree<-root(tree, outgroup, node = NULL, resolve.root = TRUE)
+is.rooted(tree) #check if tree is rooted
+```
+Définir les branche de longueur null à 1/10 000e de la taille de l'arbre
+```r
+tree$edge.length[tree$edge.length==0]<-max(nodeHeights(tree))*1e-4
+```
+Vérifiez que les nom des feuille correspondent EXACTEMENT à ceux du dataset
+```r
+name.check(tree, dataset)
+#if necessary
+tree$tip.label<-gsub(" ", "_", tree$tip.label) #replace any whitespace with underscore
+rownames(dataset)<-dataset$Species #name the data rows
+```
+
+
+
 
 
 
