@@ -228,7 +228,7 @@ add.simmap.legend(colors=cols,prompt=TRUE,fsize=0.8,vertical=TRUE, shape="square
 ![image](https://user-images.githubusercontent.com/20643860/219701552-8f3619fe-daa8-4a16-b1a5-2e6b550a734c.png)
 
 
-# Tester des omdèles évolutifs compte tenu de la phylogénie
+# Tester des modèles évolutifs en prenant en compte la phylogénie
 
 Vérifier que l'arbre est dichotomique (pleinement résolu):
 ```r
@@ -245,13 +245,76 @@ Définir les branche de longueur null à 1/10 000e de la taille de l'arbre
 ```r
 tree$edge.length[tree$edge.length==0]<-max(nodeHeights(tree))*1e-4
 ```
-Vérifiez que les nom des feuille correspondent EXACTEMENT à ceux du dataset
+Vérifiez que les noms des feuilles correspondent EXACTEMENT à ceux du dataset
 ```r
 name.check(tree, dataset)
 #if necessary
 tree$tip.label<-gsub(" ", "_", tree$tip.label) #replace any whitespace with underscore
 rownames(dataset)<-dataset$Species #name the data rows
 ```
+Regardons les données:
+```r
+par(mfrow=c(1,2))
+hist(traits$AM)
+hist(traits$MAX.AGE)
+ dev.off()
+ ```
+ 
+ On peut  normaliser les données avec une tranformation log10, afin de se rapprocher de l'hypothèse de normalité
+ 
+ ```r
+ par(mfrow=c(1,1))
+hist(log10(traits$AM))
+traits$log.AM<-log10(traits$AM)
+```
+
+On peut maintenant réaliser une régression linéaire pour voir la corrélation entre ces traits
+```r
+model1<-lm(MAX.AGE~log.AM, data=traits)
+summary(model1)
+```
+<img width="461" alt="image" src="https://user-images.githubusercontent.com/20643860/223836405-de93b103-0a5f-4e94-a293-5cba95847652.png">
+
+```r
+plot(MAX.AGE~log.AM, data=traits)
+abline(model1, col="Red")
+```
+![image](https://user-images.githubusercontent.com/20643860/223836812-17c46e6b-79cf-4dd2-ac5d-397401471d13.png)
+
+Il y a une corrélation significative entre ces traits mais à ce stade on ne sait pas si cette relation est indépendante de la phylogénie.
+
+**1) Calculer différentes mesures du signal phylogénétique**
+
+<img width="411" alt="image" src="https://user-images.githubusercontent.com/20643860/223840055-d2043619-214a-4f2d-bca1-425cd05939e4.png">
+Figure issue de *"Meireles, José Eduardo, Brian O’Meara, and Jeannine Cavender-Bares. "Linking leaf spectra to the plant tree of life." Remote sensing of plant biodiversity (2020): 155-172.*
+
+
+- <ins>Signal phylogénétique avec le λ (lambda) de Pagel</ins> (Pagel, 1999)
+
+Lambda est une facteur de transformation des branches de l'arbre afin que les données obtenues 'fit' une modèle de mouvement brownien (i.e. dérive génétique). Si le lambda estimé = 0, les traits inférés ont évolué indépendamment de la phylogénie. Lambda = 1 correspond à un modèle brownien (l'évolution du trait est entièrement dû un signal génétique). Lambda varie généralement entre 0 et 1 mais Lambda peut être supérieur à 1 lorsque les covariances phylogénétiques sont plus fortes qu'attendes sous le modèle brownien.
+
+```r
+tree0 <- rescale(tree, model = "lambda", 0)
+tree1 <- rescale(tree, model = "lambda", 1)
+tree.3 <- rescale(tree, model = "lambda", 0.3)
+par(mfcol = c(1, 4))
+plot(tree)
+title("original tree")
+plot(tree1) #complete brownian motion
+title("lambda=1")
+plot(tree.3) #some weak signal
+title("lambda=0.3")
+plot(tree0) #star phylogeny (no phylo signal)
+title("lambda=0")
+```
+
+- <ins>Signal phylogénétique avec le K de Blomberg</ins> (Blomberg et al. 2003)
+
+K peut être considéré comme la proportion de covariance dûe à la phylogénie. Varie généralement entre O et 1 mais peut être supérieur à 1 si les covariances phylogénétiques sont plus fortes qu'attendes sous le modèle brownien.
+
+
+
+
 
 
 
