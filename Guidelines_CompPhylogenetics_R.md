@@ -397,7 +397,6 @@ La corrélation reste significative mais les paramètres de l'équation sont dif
 plot(MAX.AGE ~ log.AM , data=traits)
 abline(comp.pgls, col="red",lty=1)
 abline(model1, col="red",lty=2)
-legend()
 legend('topleft', legend=c("PGLS", "Original"), cex=0.8, col="red", lty=c(1,2))
 ```
 
